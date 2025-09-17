@@ -2,14 +2,20 @@ ARG VERSION=latest
 
 FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
-# Install the xz-utils package
-RUN apt-get update && apt-get install -y xz-utils
+RUN apt-get update && \
+    apt-get install -y xz-utils curl build-essential libssl-dev libicu-dev libpq-dev
 
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
 
-# Instalar Node.js e npm
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g @nestjs/cli
+RUN npm install -g @nestjs/cli prisma
 
 WORKDIR /workspace
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "run", "dev"]
