@@ -1,0 +1,37 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build
+dist/
+build/
+tmp/
+*.tsbuildinfo
+
+# Logs
+*.log
+logs/
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Swagger (se você gerar docs JSON/YAML no build)
+swagger.json
+swagger.yaml
+
+# Ambiente
+.env
+.env.*
+
+# IDEs e editores
+.vscode/
+.idea/
+*.iml
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
