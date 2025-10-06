@@ -122,9 +122,60 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
+  activatedAt: 'activatedAt',
+  name: 'name',
   email: 'email',
+  hash: 'hash',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InvestmentWalletScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  currencyId: 'currencyId',
+  userId: 'userId'
+};
+
+exports.Prisma.InvestmentScalarFieldEnum = {
+  id: 'id',
+  ticker: 'ticker',
+  category: 'category',
+  quantity: 'quantity',
+  currentPrice: 'currentPrice',
+  walletId: 'walletId'
+};
+
+exports.Prisma.CurrencyScalarFieldEnum = {
+  id: 'id',
+  symbol: 'symbol',
+  code: 'code'
+};
+
+exports.Prisma.FinanceWalletScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  balance: 'balance',
+  currencyId: 'currencyId',
+  userId: 'userId'
+};
+
+exports.Prisma.MonthReportScalarFieldEnum = {
+  id: 'id',
+  month: 'month',
+  year: 'year',
+  monthBalance: 'monthBalance',
+  walletId: 'walletId'
+};
+
+exports.Prisma.TransactionScalarFieldEnum = {
+  id: 'id',
+  description: 'description',
+  amount: 'amount',
+  date: 'date',
+  type: 'type',
+  status: 'status',
+  walletId: 'walletId'
 };
 
 exports.Prisma.SortOrder = {
@@ -137,9 +188,38 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.InvestmentCategory = exports.$Enums.InvestmentCategory = {
+  STOCK: 'STOCK',
+  FII: 'FII',
+  ETF: 'ETF',
+  CRYPTO: 'CRYPTO',
+  FIXED_INCOME: 'FIXED_INCOME'
+};
+
+exports.TransactionType = exports.$Enums.TransactionType = {
+  FOOD: 'FOOD',
+  HEALTH: 'HEALTH',
+  OTHER: 'OTHER'
+};
+
+exports.TransactionStatus = exports.$Enums.TransactionStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  RECEIVED: 'RECEIVED'
+};
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  InvestmentWallet: 'InvestmentWallet',
+  Investment: 'Investment',
+  Currency: 'Currency',
+  FinanceWallet: 'FinanceWallet',
+  MonthReport: 'MonthReport',
+  Transaction: 'Transaction'
 };
 
 /**

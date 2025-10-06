@@ -94,9 +94,60 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
+  activatedAt: 'activatedAt',
+  name: 'name',
   email: 'email',
+  hash: 'hash',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InvestmentWalletScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  currencyId: 'currencyId',
+  userId: 'userId'
+};
+
+exports.Prisma.InvestmentScalarFieldEnum = {
+  id: 'id',
+  ticker: 'ticker',
+  category: 'category',
+  quantity: 'quantity',
+  currentPrice: 'currentPrice',
+  walletId: 'walletId'
+};
+
+exports.Prisma.CurrencyScalarFieldEnum = {
+  id: 'id',
+  symbol: 'symbol',
+  code: 'code'
+};
+
+exports.Prisma.FinanceWalletScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  balance: 'balance',
+  currencyId: 'currencyId',
+  userId: 'userId'
+};
+
+exports.Prisma.MonthReportScalarFieldEnum = {
+  id: 'id',
+  month: 'month',
+  year: 'year',
+  monthBalance: 'monthBalance',
+  walletId: 'walletId'
+};
+
+exports.Prisma.TransactionScalarFieldEnum = {
+  id: 'id',
+  description: 'description',
+  amount: 'amount',
+  date: 'date',
+  type: 'type',
+  status: 'status',
+  walletId: 'walletId'
 };
 
 exports.Prisma.SortOrder = {
@@ -109,9 +160,38 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+exports.InvestmentCategory = exports.$Enums.InvestmentCategory = {
+  STOCK: 'STOCK',
+  FII: 'FII',
+  ETF: 'ETF',
+  CRYPTO: 'CRYPTO',
+  FIXED_INCOME: 'FIXED_INCOME'
+};
+
+exports.TransactionType = exports.$Enums.TransactionType = {
+  FOOD: 'FOOD',
+  HEALTH: 'HEALTH',
+  OTHER: 'OTHER'
+};
+
+exports.TransactionStatus = exports.$Enums.TransactionStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  RECEIVED: 'RECEIVED'
+};
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  InvestmentWallet: 'InvestmentWallet',
+  Investment: 'Investment',
+  Currency: 'Currency',
+  FinanceWallet: 'FinanceWallet',
+  MonthReport: 'MonthReport',
+  Transaction: 'Transaction'
 };
 /**
  * Create the Client
@@ -124,7 +204,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\O Padrinho\\Documents\\GitHub\\Orbyt-Backend\\orbyt\\src\\infra\\prisma\\generated\\prisma",
+      "value": "/Users/thegodfatherjunior/GitHub/Orbyt-Backend/orbyt/src/infra/prisma/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -133,7 +213,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       },
       {
@@ -142,7 +222,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\O Padrinho\\Documents\\GitHub\\Orbyt-Backend\\orbyt\\src\\infra\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/thegodfatherjunior/GitHub/Orbyt-Backend/orbyt/src/infra/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -165,13 +245,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated/prisma\"\n  binaryTargets = [\"native\", \"linux-musl\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DB_URL\")\n}\n\nmodel User {\n  id        String   @id @default(uuid())\n  email     String   @unique\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "98f927c68af967a27506c1f52da2faa4156526a10cc9eac2e94834e1eebe7ad5",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated/prisma\"\n  binaryTargets = [\"native\", \"linux-musl\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DB_URL\")\n}\n\nmodel User {\n  id                String             @id @default(uuid())\n  activatedAt       DateTime?\n  name              String\n  email             String             @unique\n  hash              String\n  financeWallets    FinanceWallet[]\n  investmentWallets InvestmentWallet[]\n  createdAt         DateTime           @default(now())\n  updatedAt         DateTime           @updatedAt\n}\n\nmodel InvestmentWallet {\n  id          String       @id @default(uuid())\n  name        String\n  currencyId  String\n  currency    Currency     @relation(fields: [currencyId], references: [id])\n  investments Investment[]\n  userId      String\n  user        User         @relation(fields: [userId], references: [id])\n}\n\nmodel Investment {\n  id           String             @id @default(uuid())\n  ticker       String\n  category     InvestmentCategory\n  quantity     Float\n  currentPrice Float\n  walletId     String\n  wallet       InvestmentWallet   @relation(fields: [walletId], references: [id])\n}\n\nmodel Currency {\n  id       String             @id @default(uuid())\n  symbol   String\n  code     String             @unique\n  wallets  InvestmentWallet[]\n  finances FinanceWallet[]\n}\n\nenum InvestmentCategory {\n  STOCK\n  FII\n  ETF\n  CRYPTO\n  FIXED_INCOME\n}\n\nmodel FinanceWallet {\n  id           String        @id @default(uuid())\n  name         String\n  balance      Float\n  currencyId   String\n  currency     Currency      @relation(fields: [currencyId], references: [id])\n  transactions Transaction[]\n  monthReports MonthReport[]\n  userId       String\n  user         User          @relation(fields: [userId], references: [id])\n}\n\nmodel MonthReport {\n  id           String        @id @default(uuid())\n  month        Int\n  year         Int\n  monthBalance Float\n  walletId     String\n  wallet       FinanceWallet @relation(fields: [walletId], references: [id])\n}\n\nmodel Transaction {\n  id          String            @id @default(uuid())\n  description String\n  amount      Float\n  date        DateTime\n  type        TransactionType\n  status      TransactionStatus\n  walletId    String\n  wallet      FinanceWallet     @relation(fields: [walletId], references: [id])\n}\n\nenum TransactionType {\n  FOOD\n  HEALTH\n  OTHER\n}\n\nenum TransactionStatus {\n  PENDING\n  PAID\n  RECEIVED\n}\n",
+  "inlineSchemaHash": "f9900a0c2b7376858fca0e2de543e31b858111bd690dd4fb2891d55fd889a406",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"activatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"financeWallets\",\"kind\":\"object\",\"type\":\"FinanceWallet\",\"relationName\":\"FinanceWalletToUser\"},{\"name\":\"investmentWallets\",\"kind\":\"object\",\"type\":\"InvestmentWallet\",\"relationName\":\"InvestmentWalletToUser\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"InvestmentWallet\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currencyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currency\",\"kind\":\"object\",\"type\":\"Currency\",\"relationName\":\"CurrencyToInvestmentWallet\"},{\"name\":\"investments\",\"kind\":\"object\",\"type\":\"Investment\",\"relationName\":\"InvestmentToInvestmentWallet\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"InvestmentWalletToUser\"}],\"dbName\":null},\"Investment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ticker\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"enum\",\"type\":\"InvestmentCategory\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"currentPrice\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"walletId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"wallet\",\"kind\":\"object\",\"type\":\"InvestmentWallet\",\"relationName\":\"InvestmentToInvestmentWallet\"}],\"dbName\":null},\"Currency\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"symbol\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"wallets\",\"kind\":\"object\",\"type\":\"InvestmentWallet\",\"relationName\":\"CurrencyToInvestmentWallet\"},{\"name\":\"finances\",\"kind\":\"object\",\"type\":\"FinanceWallet\",\"relationName\":\"CurrencyToFinanceWallet\"}],\"dbName\":null},\"FinanceWallet\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"balance\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"currencyId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currency\",\"kind\":\"object\",\"type\":\"Currency\",\"relationName\":\"CurrencyToFinanceWallet\"},{\"name\":\"transactions\",\"kind\":\"object\",\"type\":\"Transaction\",\"relationName\":\"FinanceWalletToTransaction\"},{\"name\":\"monthReports\",\"kind\":\"object\",\"type\":\"MonthReport\",\"relationName\":\"FinanceWalletToMonthReport\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"FinanceWalletToUser\"}],\"dbName\":null},\"MonthReport\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"month\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"year\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"monthBalance\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"walletId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"wallet\",\"kind\":\"object\",\"type\":\"FinanceWallet\",\"relationName\":\"FinanceWalletToMonthReport\"}],\"dbName\":null},\"Transaction\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"TransactionType\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"TransactionStatus\"},{\"name\":\"walletId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"wallet\",\"kind\":\"object\",\"type\":\"FinanceWallet\",\"relationName\":\"FinanceWalletToTransaction\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),
