@@ -1,5 +1,5 @@
-import { PrismaClient } from "src/infra/prisma/generated/prisma"; 
-import { prisma } from "src/infra/prisma/client";
+import { Injectable } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
 
 export type User = {
     id: string,
@@ -17,7 +17,8 @@ export interface UserRepository {
     delete(id: string): Promise<User | null>;
 }
 
-class PrismaUserRepository implements UserRepository {
+@Injectable()
+export class PrismaUserRepository implements UserRepository {
     constructor(private readonly prisma: PrismaClient) { }
     
     async findById(id: string): Promise<User | null> {
@@ -41,5 +42,3 @@ class PrismaUserRepository implements UserRepository {
         return this.prisma.user.delete({ where: { id }});
     }
 }
-
-export const defaultPrismaUserRepository = new PrismaUserRepository(prisma)
