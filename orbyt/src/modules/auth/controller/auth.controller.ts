@@ -10,6 +10,7 @@ import { Public } from "src/util/endpoint.docorator";
 export class AuthController {
     constructor(private readonly authService: AuthService) {} 
 
+    @Public()
     @Post('signup')
     async signUp(@Body() newUserDto: SignUpRequestDto) {
         return await this.authService.signUp(newUserDto);
