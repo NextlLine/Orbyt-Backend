@@ -10,12 +10,14 @@ import { SignInDtoRequest } from "../dto/singin.request.dto";
 import { SignUpRequestDto } from "../dto/signup.request.dto";
 import bcrypt from "bcrypt";
 import { SignUpResponseDto } from "../dto/sighup.response.dto";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject("UserRepository")
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signUp(newUserDto: SignUpRequestDto) {
@@ -48,19 +50,14 @@ export class AuthService {
     if (!existing) throw new NotFoundException("User not found");
     if (existing.activatedAt === null) throw new UnauthorizedException("User not authorized or not activated");
 
-    const passwordMatches = bcrypt.compareSync(
-      signinUserDto.hash,
-      existing.hash
-    );
+    const passwordMatches = bcrypt.compareSync(signinUserDto.hash,existing.hash);
 
     if (!passwordMatches) throw new UnauthorizedException("Incorrect password");
-    
+
+    const payload = { sub: existing.id, uername: existing.email }
+
     return {
-      message: "Login successful",
-      user: {
-        id: existing.id,
-        email: existing.email,
-      },
+      acces_taken: await this.jwtService.signAsync(payload),
     };
   }
 }
