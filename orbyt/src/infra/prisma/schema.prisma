@@ -12,9 +12,10 @@ datasource db {
 model User {
   id                 String              @id @default(uuid())
   activatedAt        DateTime?
-  name               String
-  email              String              @unique
-  hash               String
+  name               String              @db.VarChar(64)  
+  doc                String              @unique @db.VarChar(14)  
+  email              String              @unique @db.VarChar(128)  
+  hash               String              
   financeWallets     FinanceWallet[]     
   investmentWallets  InvestmentWallet[]  
   createdAt          DateTime            @default(now())

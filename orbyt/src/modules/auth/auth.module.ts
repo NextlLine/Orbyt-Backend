@@ -11,13 +11,10 @@ import { PrismaClient } from "@prisma/client";
     AuthService,
     PrismaUserRepository,
     {
-      provide: PrismaClient,
-      useValue: prisma, 
-    },
-    {
       provide: 'UserRepository',
       useClass: PrismaUserRepository,
     },
   ],
 })
 export class AuthModule {}
+
