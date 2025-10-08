@@ -29,7 +29,7 @@ model InvestmentWallet {
   currency     Currency      @relation(fields: [currencyId], references: [id])
   investments  Investment[]
   userId       String
-  user         User          @relation(fields: [userId], references: [id])
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Investment {
@@ -59,7 +59,7 @@ model FinanceWallet {
   transactions   Transaction[]
   monthReports   MonthReport[]
   userId         String
-  user           User            @relation(fields: [userId], references: [id])
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model MonthReport {

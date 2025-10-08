@@ -1,11 +1,10 @@
 import {
   ConflictException,
   Injectable,
-  Inject,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import type { UserRepository } from "src/repositories/user.repository";
+import { UserRepository } from "src/repositories/user.repository";
 import { SignInDtoRequest } from "../dto/singin.request.dto";
 import { SignUpRequestDto } from "../dto/signup.request.dto";
 import bcrypt from "bcrypt";
@@ -15,10 +14,9 @@ import { JwtService } from "@nestjs/jwt";
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject("UserRepository")
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async signUp(newUserDto: SignUpRequestDto) {
     const emailExisting = await this.userRepository.findByEmail(newUserDto.email);
@@ -50,7 +48,7 @@ export class AuthService {
     if (!existing) throw new NotFoundException("User not found");
     if (existing.activatedAt === null) throw new UnauthorizedException("User not authorized or not activated");
 
-    const passwordMatches = bcrypt.compareSync(signinUserDto.hash,existing.hash);
+    const passwordMatches = bcrypt.compareSync(signinUserDto.hash, existing.hash);
 
     if (!passwordMatches) throw new UnauthorizedException("Incorrect password");
 

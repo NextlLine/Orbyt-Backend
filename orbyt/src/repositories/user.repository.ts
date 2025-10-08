@@ -11,44 +11,38 @@ export type User = {
 
 }
 
-export interface UserRepository {
-    findById(id: string): Promise<User | null>;
-    findByEmail(email: string): Promise<User | null>;
-    findByDoc(doc: string): Promise<User | null>;
-    create(newUser: Omit<User, "id">): Promise<User | null>;
-    update(id: string, updateUser: Partial<User>): Promise<User | null>;
-    delete(id: string): Promise<User | null>;
+export abstract class UserRepository {
+    abstract findById(id: string): Promise<User | null>;
+    abstract findByEmail(email: string): Promise<User | null>;
+    abstract findByDoc(doc: string): Promise<User | null>;
+    abstract create(data: Omit<User, "id">): Promise<User>;
+    abstract update(id: string, updateUser: Partial<User>): Promise<User>;
+    abstract delete(id: string): Promise<void>;
 }
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
-    constructor(private readonly prisma: PrismaClient) {}
-    
+    constructor(private readonly prisma: PrismaClient) { }
+
     async findById(id: string): Promise<User | null> {
         return this.prisma.user.findUnique({ where: { id } });
     }
-
     async findByEmail(email: string): Promise<User | null> {
         return this.prisma.user.findUnique({ where: { email } });
     }
-
-     findByDoc(doc: string): Promise<User | null> {
-        return this.prisma.user.findUnique({ where: {doc} });
+    async findByDoc(doc: string): Promise<User | null> {
+        return this.prisma.user.findUnique({ where: { doc } });
     }
-
-    async create(newUser: Omit<User, "id">): Promise<User | null> {
-        return this.prisma.user.create({ data: { ...newUser } });
+    async create(data: Omit<User, "id">): Promise<User> {
+        return this.prisma.user.create({ data: { ...data } });
     }
-
-    async update(id: string, updateUser: Partial<User>): Promise<User | null> {
+    async update(id: string, data: Partial<User>): Promise<User> {
         return this.prisma.user.update({
             where: { id },
-            data:{ ...updateUser }
+            data: { ...data }
         });
     }
-
-    async delete(id: string): Promise<User | null> {
-        return this.prisma.user.delete({ where: { id }});
+    async delete(id: string): Promise<void> {
+        this.prisma.user.delete({ where: { id } });
     }
-
 }
