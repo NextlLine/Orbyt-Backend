@@ -58,4 +58,11 @@ export class AuthService {
       acces_taken: await this.jwtService.signAsync(payload),
     };
   }
+
+async validateToken(emailFromToken: string, emailFromBody: string) {
+    if (emailFromToken !== emailFromBody) 
+        throw new UnauthorizedException("Invalid token or mismatched email");
+    return { message: "Token is valid" };
+}
+
 }

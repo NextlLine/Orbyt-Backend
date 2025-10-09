@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, TransactionType } from "@prisma/client"; 
 
 export type FinanceWallet = {
     id: string,
@@ -8,15 +8,23 @@ export type FinanceWallet = {
     currencyId: string,
     userId: string,
     currency?: Currency,
+    transactions?: Transaction[]
     monthReports?: MonthReport[],
 }
 
+export type Transaction = {
+    id: string,
+    description: string,
+    amount: number,
+    date: Date,
+    type: TransactionType,
+    walletId: string,
+}
 export type MonthReport = {
-  id: string ,
-  month: number,
-  year: number,
-  monthBalance: number,
-  walletId: string,
+    id: string,
+    date: Date,
+    monthBalance: number,
+    walletId: string,
 }
 
 export type Currency = {
@@ -38,15 +46,15 @@ export class PrismaFinanceWalletRepository implements FinanceWalletRepository {
     constructor(private readonly prisma: PrismaClient) { }
 
     async findAll(userId: string): Promise<FinanceWallet[]> {
-        return this.prisma.financeWallet.findMany({ where: { userId }, include: { currency: true, monthReports: true } })
+        return this.prisma.financeWallet.findMany({ where: { userId }, include: { currency: true, monthReports: true, transactions: true } })
     }
     async findById(id: string): Promise<FinanceWallet | null> {
         return this.prisma.financeWallet.findUnique({ where: { id } })
     }
-    async create(newWallet: Omit<FinanceWallet,  "id" | "currency" | "monthReports">): Promise<FinanceWallet> {
+    async create(newWallet: Omit<FinanceWallet, "id" | "currency" | "monthReports" | "transactions">): Promise<FinanceWallet> {
         return this.prisma.financeWallet.create({ data: { ...newWallet } })
     }
-    async update(id: string, data: Partial<Omit<FinanceWallet, "currency" | "monthReports">>): Promise<FinanceWallet> {
+    async update(id: string, data: Partial<Omit<FinanceWallet, "currency" | "monthReports" | "transactions">>): Promise<FinanceWallet> {
         return this.prisma.financeWallet.update({
             where: { id: data.id },
             data: { ...data }

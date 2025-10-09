@@ -15,7 +15,7 @@ export class FinanceService {
     await this.verifyUserId(userId);
 
     const finances = await this.financeRepository.findAll(userId);
-    // console.dir(finances, { depth: null }); // 👈 mostra todos os dados aninhados
+    // console.dir(finances, { depth: null }); 
 
     return {
       message: "Wallets retrieved successfully",

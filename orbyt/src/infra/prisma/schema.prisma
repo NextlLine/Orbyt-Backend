@@ -64,8 +64,7 @@ model FinanceWallet {
 
 model MonthReport {
   id             String       @id @default(uuid())
-  month          Int
-  year           Int
+  date           DateTime
   monthBalance   Float
   walletId       String
   wallet         FinanceWallet  @relation(fields: [walletId], references: [id])
@@ -77,7 +76,6 @@ model Transaction {
   amount      Float
   date        DateTime
   type        TransactionType
-  status      TransactionStatus
   walletId    String
   wallet      FinanceWallet     @relation(fields: [walletId], references: [id])
 }
@@ -86,12 +84,6 @@ enum TransactionType {
   FOOD
   HEALTH
   OTHER
-}
-
-enum TransactionStatus {
-  PENDING
-  PAID
-  RECEIVED
 }
 
 enum InvestmentCategory {

@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { FinanceWallet } from "src/repositories/finance.wallet.repository";
 import { CurrencyResponseDto } from "./currency.response.dto";
 import { MonthReportResponseDto } from "./month.report.response.dto";
+import { TransactionResponseDto } from "./transaction.response.dto";
 
 export class FinanceResponseDto {
   @ApiProperty({ description: "Unique ID of the financial wallet", example: "uuid-1234" })
@@ -25,6 +26,10 @@ export class FinanceResponseDto {
   @ApiPropertyOptional({ description: "Month report details (if loaded via include)" })
   monthReports?: MonthReportResponseDto[];
 
+  @ApiPropertyOptional({ description: "Transaction details (if loaded via include)"})
+  transactions?: TransactionResponseDto[];
+
+
   constructor(finance: FinanceWallet) {
     this.id = finance.id;
     this.name = finance.name;
@@ -40,6 +45,12 @@ export class FinanceResponseDto {
       this.monthReports = finance.monthReports.map(
         report => new MonthReportResponseDto(report)
       );
+    }
+
+    if (finance.transactions && finance.transactions.length > 0) {
+      this.transactions = finance.transactions.map(
+        transaction => new TransactionResponseDto(transaction)
+      )
     }
   }
 }
