@@ -9,7 +9,7 @@ export class UserController {
 
     @UseGuards(AuthGuard)
     @Get()
-    async findAllWallets(@Request() req) {
+    async basicUser(@Request() req) {
         return await this.userService.getBasicUser(req.user.sub);
     }
 

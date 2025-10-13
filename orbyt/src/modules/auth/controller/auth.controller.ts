@@ -29,6 +29,4 @@ export class AuthController {
         const { email } = body;     
         return await this.authService.validateToken(req.user.uername, email);
     }
-
-
 }
