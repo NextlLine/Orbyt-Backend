@@ -9,7 +9,7 @@ export class FinanceService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly financeRepository: FinanceWalletRepository
-  ) {}
+  ) { }
 
   async findAllWallets(userId: string) {
     await this.verifyUserId(userId);
@@ -28,13 +28,27 @@ export class FinanceService {
 
     const newWallet = await this.financeRepository.create({
       ...data,
-      userId: userId, 
+      userId: userId,
     });
 
     return {
       message: "Wallet created successfully",
       data: new FinanceResponseDto(newWallet),
     };
+  }
+
+  async deleteWallet(userId: string, id: string) {
+    await this.verifyUserId(userId)
+
+    const walletTarget = this.financeRepository.findById(id)
+
+    if (!walletTarget) throw new NotFoundException("Wallet not found")
+
+    await this.financeRepository.delete(id)
+
+    return {
+      message: "Wallet deleted successfully"
+    }
   }
 
   async verifyUserId(id: string) {
