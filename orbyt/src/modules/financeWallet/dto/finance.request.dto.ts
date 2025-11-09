@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNumber } from "class-validator";
+import { IsString, IsNumber, IsOptional } from "class-validator";
 
 export class FinanceRequestDto {
   @ApiProperty({ description: "Name of the wallet", example: "Main Wallet" })

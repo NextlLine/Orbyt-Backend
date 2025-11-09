@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { FinanceWallet } from "src/repositories/finance.wallet.repository";
 import { CurrencyResponseDto } from "./currency.response.dto";
 import { MonthReportResponseDto } from "./month.report.response.dto";
-import { TransactionResponseDto } from "./transaction.response.dto";
+import { TransactionResponseDto } from "../../transaction/dto/transaction.response.dto";
+import { FinanceWallet } from "src/infra/model/model";
 
 export class FinanceResponseDto {
   @ApiProperty({ description: "Unique ID of the financial wallet", example: "uuid-1234" })

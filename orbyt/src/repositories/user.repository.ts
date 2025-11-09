@@ -1,15 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "@prisma/client";
-
-export type User = {
-    id: string,
-    email: string,
-    hash: string,
-    name: string,
-    activatedAt: Date | null,
-    doc: string,
-
-}
+import { User } from "src/infra/model/model";
 
 export abstract class UserRepository {
     abstract findById(id: string): Promise<User | null>;

@@ -1,6 +1,6 @@
 import { IsString, IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/repositories/user.repository';
+import { User } from 'src/infra/model/model';
 
 export class UserResponseDto {
   @ApiProperty({

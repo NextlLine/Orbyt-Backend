@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Currency } from "src/repositories/finance.wallet.repository";
+import { Currency } from "src/infra/model/model";
 
 export class CurrencyResponseDto {
   @ApiProperty({ description: "Unique ID of the currency", example: "uuid-1234" })

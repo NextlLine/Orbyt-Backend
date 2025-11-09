@@ -12,20 +12,16 @@ export class FinanceService {
   ) { }
 
   async findAllWallets(userId: string) {
-    await this.verifyUserId(userId);
-
     const finances = await this.financeRepository.findAll(userId);
     // console.dir(finances, { depth: null }); 
 
     return {
       message: "Wallets retrieved successfully",
-      data: finances.map((finance) => new FinanceResponseDto(finance)),
+      data: finances.map((f) => new FinanceResponseDto(f)),
     };
   }
 
   async createWallet(userId: string, data: FinanceRequestDto) {
-    await this.verifyUserId(userId);
-
     const newWallet = await this.financeRepository.create({
       ...data,
       userId: userId,
@@ -37,13 +33,20 @@ export class FinanceService {
     };
   }
 
-  async deleteWallet(userId: string, id: string) {
-    await this.verifyUserId(userId)
+  async updateFinanceWallet(id: string, data: FinanceRequestDto) {
 
-    const walletTarget = this.financeRepository.findById(id)
+    await this.verifyWalletId(id);
 
-    if (!walletTarget) throw new NotFoundException("Wallet not found")
+    const updatedWallet = await this.financeRepository.update(id, data);
 
+    return {
+      message: "Wallet updated successfully",
+      data: new FinanceResponseDto(updatedWallet),
+    }
+  }
+
+  async deleteWallet(id: string) {
+    await this.verifyWalletId(id)
     await this.financeRepository.delete(id)
 
     return {
@@ -51,9 +54,9 @@ export class FinanceService {
     }
   }
 
-  async verifyUserId(id: string) {
-    const existing = await this.userRepository.findById(id);
+  async verifyWalletId(id: string) {
+    const walletTarget = this.financeRepository.findById(id)
 
-    if (!existing) throw new NotFoundException("User not found");
+    if (!walletTarget) throw new NotFoundException("Wallet not found")
   }
 }

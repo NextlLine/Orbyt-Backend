@@ -27,6 +27,7 @@ export class AuthService {
 
     const saltOrRounds = 10;
     const passHash = bcrypt.hashSync(newUserDto.hash, saltOrRounds);
+    
 
     const user = await this.userRepository.create({
       ...newUserDto,

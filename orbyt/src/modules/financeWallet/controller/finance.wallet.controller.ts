@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/util/jwt.guard";
 import { Request } from '@nestjs/common';
 import { FinanceService } from "../service/finance.wallet.service";
@@ -22,7 +22,13 @@ export class FinanceController {
 
     @UseGuards(AuthGuard)
     @Delete(':id')
-    async deleteFinanceWallet(@Request() req, @Param('id') id: string) {
-        return await this.financeWalletService.deleteWallet(req.user.sub, id);
+    async deleteFinanceWallet(@Param('id') id: string) {
+        return await this.financeWalletService.deleteWallet(id);
+    }
+
+    @UseGuards(AuthGuard)
+    @Put(':id')
+    async updateFinanceWallet(@Param('id') id: string, data: FinanceRequestDto) {
+        return await this.financeWalletService.updateFinanceWallet(id, data)
     }
 }

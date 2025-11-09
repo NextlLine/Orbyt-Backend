@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TransactionType } from "@prisma/client";
-import { Transaction } from "src/repositories/finance.wallet.repository";
+import { Transaction, TransactionType } from "src/infra/model/model";
 
 export class TransactionResponseDto {
     @ApiProperty({ description: "Unique ID of the transaction", example: "uuid-1234" })

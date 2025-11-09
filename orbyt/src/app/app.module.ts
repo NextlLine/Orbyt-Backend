@@ -7,6 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from 'src/util/jwt.guard';
 import { FinanceModule } from 'src/modules/financeWallet/finance.wallet.module';
 import { UserModule } from 'src/modules/user/user.module';
+import { TransactionModule } from 'src/modules/transaction/transaction.module';
 
 
 @Module({
@@ -14,6 +15,7 @@ import { UserModule } from 'src/modules/user/user.module';
     PrismaModule,
     AuthModule,
     FinanceModule,
+    TransactionModule,
     UserModule,
     JwtModule.register({
       global: true,
