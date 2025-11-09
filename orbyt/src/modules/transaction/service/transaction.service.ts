@@ -30,6 +30,8 @@ export class TransactionService {
             ...data,
         });
 
+        await this.financeRepository.addAmount(data.walletId, data.amount);
+
         return {
             message: "Transaction created successfully",
             data: new TransactionResponseDto(newTransaction)
