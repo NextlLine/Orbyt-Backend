@@ -5,7 +5,7 @@ import { TransactionService } from "../service/transaction.service";
 import { TransactionRequestDto } from "../dto/transaction.request.dto";
 
 
-@Controller('finance')
+@Controller('transaction')
 export class TransactionController {
     constructor(private readonly transactionService: TransactionService) { }
 
