@@ -1,0 +1,46 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: DockerFile
+    container_name: orbyt-backend
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./:/home/node:cached
+      - /home/node/node_modules
+    command: sh -c "npx prisma migrate deploy && npm run dev"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - orbyt-db
+
+  orbyt-db:
+    image: postgres:17-alpine
+    container_name: orbyt-db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-orbyt
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${PGADMIN_PORT}:80"
+    depends_on:
+      - orbyt-db
+
+volumes:
+  postgres_data:

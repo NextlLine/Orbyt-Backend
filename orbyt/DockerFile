@@ -1,0 +1,22 @@
+ARG VERSION=latest
+
+FROM mcr.microsoft.com/devcontainers/base:ubuntu
+
+RUN apt-get update && \
+    apt-get install -y xz-utils curl build-essential libssl-dev libicu-dev libpq-dev
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
+
+RUN npm install -g @nestjs/cli prisma
+
+WORKDIR /workspace
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+RUN npx prisma generate 
+
+CMD ["npm", "run", "dev"]
